@@ -1,4 +1,4 @@
-# Redes-Neurais
+# Primeiro trabalho: Descida de gradiente
 
 O objetivo é estimar o mínimo de uma função f(x). O argumento x pode ser
 unidimensional ou multidimensional.

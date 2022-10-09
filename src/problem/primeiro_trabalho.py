@@ -64,9 +64,12 @@ class PrimeiroTrabalho(ProblemInterface):
     def task3(self, x0, alfa, gmin, kmax):
         xk = x0
         k = 0
-        while k < kmax and math.fabs(self.task2(xk, alfa)) < gmin:
+        x = [xk]
+        while k < kmax and math.fabs(self.task2(xk, alfa)) > gmin:
             xk = self.task2(xk, alfa)
+            x.append(xk)
             k += 1
+        print(x)
         return print('O valor que minimiza a função f(x) é x=', xk)
 
 

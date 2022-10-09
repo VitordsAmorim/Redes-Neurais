@@ -6,7 +6,8 @@ def gradient_descent(problem):
     de aprendizagem alfa= 0.1, calcule o próximo valor x1 pela descida de gradiente, usando
     uma aproximação da derivada pelo método de diferenças finitas (eq. 3.1), com um passo
     h = 0.01, diferenciação numérica. """
-    next_x1 = problem.task1(x0=1, alfa=0.1, h=0.01)
+    x1 = problem.task1(x0=1, alfa=0.1, h=0.01)
+    print("x0: %.2f, x1: %.2f" % (1, x1))
 
 
     """"    Calcule x1 , usando a derivada f′(x) 

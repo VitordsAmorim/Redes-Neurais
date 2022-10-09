@@ -1,6 +1,8 @@
 import numpy as np
 from src.problem.problem_interface import ProblemInterface
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+import math
+
 
 
 class PrimeiroTrabalho(ProblemInterface):
@@ -24,8 +26,21 @@ class PrimeiroTrabalho(ProblemInterface):
     # uma aproximação da derivada pelo método de diferenças finitas (eq. 3.1), com um passo
     # h = 0.01, diferenciação numérica. """
     def task1(self, x0, alfa, h):
-        # TODO
-        return print('task1')
+        xk = x0
+        for k in range(1):
+            fx = self.function_exercise(xk)
+            df = self.dfx(xk, h)
+            xk = xk + (alfa * -df)
+        return xk
+
+    def function_exercise(self, xk):
+        fx = np.exp(xk) * xk * ((xk ** 2) - xk - 1)
+        return fx
+
+    def dfx(self, x, h):
+        """ Aproximação da derivada pelo método de diferenças finitas """
+        df = (self.function_exercise(x + h) - self.function_exercise(x))/h
+        return df
 
 
     # """"    Calcule x1 , usando a derivada f′(x)

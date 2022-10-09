@@ -10,11 +10,11 @@ class ProblemInterface(ABC):
         pass
 
     @abstractmethod
-    def task2(self):
+    def task2(self, x0, alfa):
         pass
 
     @abstractmethod
-    def task3(self):
+    def task3(self, x0, alfa, gmin, kmax):
         pass
 
     @abstractmethod

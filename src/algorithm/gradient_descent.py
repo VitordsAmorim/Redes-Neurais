@@ -33,7 +33,7 @@ def gradient_descent(problem):
           x_0 --> x_1 --> x_2 --> x_3 --> x_4 --> x_5 ...
           e f(x_0) --> f(x_1) --> f(x_2) --> f(x_3) --> f(x_4) --> f(x_5) ...
           e f'(x_0) --> f'(x_1) --> f'(x_2) --> f'(x_3) --> f'(x_4) --> f'(x_5) ..."""
-    problem.task3()
+    problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=20)
 
 
     """ 4. Determine pelo menos dois mínimos da função bidimensional:

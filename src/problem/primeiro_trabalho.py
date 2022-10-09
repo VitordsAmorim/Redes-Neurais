@@ -56,13 +56,18 @@ class PrimeiroTrabalho(ProblemInterface):
         # Converte de uma função simbólica para uma função numérica
         lam_f = lambdify(x, difx)
         # Resolve a função para um dado valor de x
+        # x_(k+1) <-  xk - alfa * f'(xk)
         xk = x0 + (alfa * -lam_f(x0))
         return xk
 
 
-    def task3(self):
-        # TODO
-        return print('task3')
+    def task3(self, x0, alfa, gmin, kmax):
+        xk = x0
+        k = 0
+        while k < kmax and math.fabs(self.task2(xk, alfa)) < gmin:
+            xk = self.task2(xk, alfa)
+            k += 1
+        return print('O valor que minimiza a função f(x) é x=', xk)
 
 
     # (a) Use o método de diferenças finitas para aproximar o gradiente.

@@ -1,5 +1,10 @@
 import numpy as np
 from src.problem.problem_interface import ProblemInterface
+from sympy import diff, Symbol
+from sympy import lambdify
+from sympy import sin, cos, exp
+
+
 # import matplotlib.pyplot as plt
 import math
 
@@ -21,10 +26,7 @@ class PrimeiroTrabalho(ProblemInterface):
         self.y = lines[:, -1:]"""
         pass
 
-    # """   Dada a função f (x) = exp(−x) ∗ x ∗ (x ∗ ∗2 − x − 1), o valor inicial x0 = 1, e a taxa
-    # de aprendizagem alfa= 0.1, calcule o próximo valor x1 pela descida de gradiente, usando
-    # uma aproximação da derivada pelo método de diferenças finitas (eq. 3.1), com um passo
-    # h = 0.01, diferenciação numérica. """
+
     def task1(self, x0, alfa, h):
         xk = x0
         for k in range(1):
@@ -43,26 +45,21 @@ class PrimeiroTrabalho(ProblemInterface):
         return df
 
 
-    # """"    Calcule x1 , usando a derivada f′(x)
-    #
-    #     Ajuda: Para calcular a derivada analiticamente, use a função ’diff’ do pacote ’sympy’ do Python.
-    #     A função ’lambdify’ converte de uma função simbólica para uma função numérica."""
-    def task2(self):
-        # TODO
-        return print('task2')
+    def task2(self, x0, alfa):
+        x = Symbol('x')
+        f = exp(x) * x * ((x ** 2) - x - 1)
+        difx = diff(f, x)
+        # Apresenta a função derivada
+        # print(difx)
+
+        """Aqui já se trata da função derivada"""
+        # Converte de uma função simbólica para uma função numérica
+        lam_f = lambdify(x, difx)
+        # Resolve a função para um dado valor de x
+        xk = x0 + (alfa * -lam_f(x0))
+        return xk
 
 
-    # """   Usando o método da descida de gradiente, tente aproximar o mínimo de f,
-    #           com o valor inicial x_0=3 e taxa de aprendizagem alpha=0.1.
-    #
-    #           Defina as duas condições de parada do Algoritmo 3, com gmin = 0.1, k_max = 20
-    #
-    #           Qual é o valor de um mínimo obtido?
-    #
-    #           Usando um gráfico bidimensional, eixo x = x, eixo y = f(x), marque os valores da aproximação
-    #           x_0 --> x_1 --> x_2 --> x_3 --> x_4 --> x_5 ...
-    #           e f(x_0) --> f(x_1) --> f(x_2) --> f(x_3) --> f(x_4) --> f(x_5) ...
-    #           e f'(x_0) --> f'(x_1) --> f'(x_2) --> f'(x_3) --> f'(x_4) --> f'(x_5) ..."""
     def task3(self):
         # TODO
         return print('task3')

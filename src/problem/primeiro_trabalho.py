@@ -3,6 +3,9 @@ from src.problem.problem_interface import ProblemInterface
 from sympy import diff, Symbol
 from sympy import lambdify
 from sympy import sin, cos, exp
+import matplotlib.pyplot as plt
+
+
 
 
 # import matplotlib.pyplot as plt
@@ -25,7 +28,6 @@ class PrimeiroTrabalho(ProblemInterface):
         self.x = lines[:, :-1]
         self.y = lines[:, -1:]"""
         pass
-
 
     def task1(self, x0, alfa, h):
         xk = x0
@@ -56,8 +58,7 @@ class PrimeiroTrabalho(ProblemInterface):
         # Converte de uma função simbólica para uma função numérica
         lam_f = lambdify(x, difx)
         # Resolve a função para um dado valor de x
-        # x_(k+1) <-  xk - alfa * f'(xk)
-        xk = x0 + (alfa * -lam_f(x0))
+        xk = x0 + (alfa * -lam_f(x0)) # x_(k+1) <-  xk - alfa * f'(xk)
         return xk
 
 
@@ -65,11 +66,17 @@ class PrimeiroTrabalho(ProblemInterface):
         xk = x0
         k = 0
         x = [xk]
+        y = []
+        # a função math.fabs é usada para obter o valor absoluto da derivada
         while k < kmax and math.fabs(self.task2(xk, alfa)) > gmin:
+            f = math.exp(xk) * xk * ((xk ** 2) - xk - 1)
+            y.append(f)
+
             xk = self.task2(xk, alfa)
             x.append(xk)
             k += 1
         print(x)
+        print(y)
         return print('O valor que minimiza a função f(x) é x=', xk)
 
 
@@ -90,7 +97,17 @@ class PrimeiroTrabalho(ProblemInterface):
         return print('task4_c')
 
     def plot(self):
-        # TODO
+        y = []
+        xaxis = []
+        for x in np.arange(-2.0, 2.0, 0.1):
+            f = exp(x) * x * ((x ** 2) - x - 1)
+            y.append(f)
+            xaxis.append(x)
+
+        plt.plot(xaxis, y)
+        #plt.xlim(4, 8)
+        plt.ylim(-5, 30)
+        plt.show()
         pass
 
     def plot_bestfit(self):

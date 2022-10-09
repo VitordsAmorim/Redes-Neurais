@@ -41,6 +41,7 @@ def gradient_descent(problem):
     f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2
         
     """
+    problem.plot()
 
     # (a) Use o método de diferenças finitas para aproximar o gradiente.
     problem.task4_a()

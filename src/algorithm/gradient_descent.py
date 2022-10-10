@@ -16,7 +16,7 @@ def gradient_descent(problem):
     
     Ajuda: Para calcular a derivada analiticamente, use a função ’diff’ do pacote ’sympy’ do Python.
     A função ’lambdify’ converte de uma função simbólica para uma função numérica."""
-    dx1, dfdx = problem.task2(x0=1, alfa=0.01)
+    dx1, dfdx = problem.task2(x0=1, alfa=0.1)
     print("Tarefa 2:")
     print("x0: %.4f, x1: %.4f" % (1, dx1))
     print("******************")
@@ -33,7 +33,7 @@ def gradient_descent(problem):
           x_0 --> x_1 --> x_2 --> x_3 --> x_4 --> x_5 ...
           e f(x_0) --> f(x_1) --> f(x_2) --> f(x_3) --> f(x_4) --> f(x_5) ...
           e f'(x_0) --> f'(x_1) --> f'(x_2) --> f'(x_3) --> f'(x_4) --> f'(x_5) ..."""
-    problem.task3(x0=3, alfa=0.2, gmin=0.1, kmax=20)
+    problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=20)
 
     # plota o gráfico que represent a função
     # o objetivo é poder conhecer um pouco da característica

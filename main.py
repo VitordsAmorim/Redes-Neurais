@@ -4,27 +4,27 @@ import time
 
 
 def build_problem(problem_name):
-    if problem_name == "Descida de gradiante":
+    if problem_name == "Gradient Descent":
         return PrimeiroTrabalho("")
     else:
         raise NotImplementedError()
 
 def main():
 
-    # Passagem de parâmetros da atividade
-    typeproblem = ["Descida de gradiante"]
-    problem = build_problem(typeproblem[0])
+    # Parameter passing
+    type_problem = ["Gradient Descent"]
+    problem = build_problem(type_problem[0])
 
     graph = []
-    t_inicial = time.time()
+    t_initial = time.time()
 
     for i in range(0, 1):
         output = gradient_descent(problem)
         graph.append(output)
 
-    # Gera dados para uma possível análise
+    # Generates data for future analysis
     t_final = time.time()
-    deltat = t_final - t_inicial
+    deltat = t_final - t_initial
     print(deltat)
 
 

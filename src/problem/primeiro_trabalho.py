@@ -1,4 +1,3 @@
-from traceback import print_list
 import numpy as np
 from src.problem.problem_interface import ProblemInterface
 from sympy import diff, Symbol
@@ -35,9 +34,9 @@ class PrimeiroTrabalho(ProblemInterface):
     def task1(self, x0, alfa, h):
         xk = x0
         for k in range(1):
-            fx = self.function_exercise(xk)
+            # fx = self.function_exercise(xk)
             df = self.dfx(xk, h)
-            xk = xk + (alfa * -df)
+            xk = xk - (alfa * df)
         return xk
 
     def function_exercise(self, xk):
@@ -45,7 +44,7 @@ class PrimeiroTrabalho(ProblemInterface):
         return fx
 
     def dfx(self, x, h):
-        """ Aproximação da derivada pelo método de diferenças finitas """
+        """ Approximation of the derivative by the finite difference method """
         df = (self.function_exercise(x + h) - self.function_exercise(x))/h
         return df
 
@@ -53,46 +52,33 @@ class PrimeiroTrabalho(ProblemInterface):
     def task2(self, x0, alfa):
         x = Symbol('x')
         f = exp(-x) * x * ((x ** 2) - x - 1)
-        difx = diff(f, x)
-        # Apresenta a função derivada
-        # print(difx)
+        difx = diff(f, x)  # dfx is the derivative of the function
 
-        """Aqui já se trata da função derivada"""
-        # Converte de uma função simbólica para uma função numérica
-        lam_f = lambdify(x, difx)#AKI É O VETOR DE GRADIENTE
-        # UTILIZANDO A DERIVADA NA MÃO
-        # lam_f = lambdify(x, ((x**3)*exp(x)+2*(x**2)*exp(x)-3*x*exp(x)-exp(x)))
-        # Resolve a função para um dado valor de x
-        dfdx = lam_f(x0)
+        """ Convert from a symbolic function to a numeric function """
+        lam_f = lambdify(x, difx)
+        dfdx = lam_f(x0) # Solve the function for a given value of x
         xk = x0 - (alfa * dfdx)  # x_(k+1) <-  xk - alfa * f'(xk)
         return xk, dfdx
 
 
     def task3(self, x0, alfa, gmin, kmax):
         xk = x0
-        k = 0
-        novo=[]
-        dfdx=0
-        # a função math.fabs é usada para obter o valor absoluto da derivada
-        # xk, dfdx = self.task2(xk, gmin)
-        # xk=x0
-        while k < kmax :#and math.fabs(dfdx) > gmin:
+        k, dfdx  = 0, 0
+        novo = []
+
+        _, dfdx = self.task2(xk, gmin)
+        """ math.fabs is used to get the absolute value of the derivative """
+        while k < kmax and math.fabs(dfdx) > gmin:
             f = math.exp(-xk) * xk * ((xk ** 2) - xk - 1)
             novo.append([dfdx,xk,f])
             xk, dfdx = self.task2(xk, alfa)
             k += 1
-        newnovo = pd.DataFrame(novo,index=None,columns=['Derivada:','X:','Y:']) 
-        print(newnovo.to_string())
-        newnovo.plot(x ='X:', y='Y:',c='Derivada:', kind = 'scatter',colormap="Reds")
-        # newnovo.plot(x ='X:', y='Derivada:', kind = 'line')
-        plt.show()
-        # fig, ax1 = plt.subplots()
-        # ax1.plot(newnovo, y='Y:',x='X:')
-        # # ax1.plot(newnovo, x='X:')
-        # # fig = px.scatter(newnovo, x='Y:', y='X:', opacity=0.65)#, color="INDICADOR",symbol="INDICADOR")
-        # fig.tight_layout()  # otherwise the right y-label is slightly clipped
-        # plt.show()
-        return print('O valor que minimiza a função f(x) é x=', xk)
+
+        # ATENÇÃO: revisar o valor de xk, que não está batendo com o valor da tabela apresentada
+        # pode ser que o xk aqui, seja o próximo valor de x
+        self.plot_3(database=novo)
+        messenger = "The minimum value found for the function f(x) is y= %0.4f x= %0.4f"
+        return print( messenger % (f, xk))
 
 
     # (a) Use o método de diferenças finitas para aproximar o gradiente.
@@ -129,6 +115,9 @@ class PrimeiroTrabalho(ProblemInterface):
         plt.show()
         pass
 
-    def plot_bestfit(self):
-        # TODO
+    def plot_3(self, database):
+        newnovo = pd.DataFrame(database,index=None,columns=['Derivada:','X:','Y:'])
+        print(newnovo.to_string())
+        newnovo.plot(x ='X:', y='Y:',c='Derivada:', kind = 'scatter',colormap="Reds")
+        plt.show()
         pass

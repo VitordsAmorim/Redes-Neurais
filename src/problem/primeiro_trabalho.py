@@ -5,11 +5,6 @@ from sympy import lambdify
 from sympy import sin, cos, exp
 import matplotlib.pyplot as plt
 import pandas as pd
-
-
-
-
-
 # import matplotlib.pyplot as plt
 import math
 
@@ -64,21 +59,21 @@ class PrimeiroTrabalho(ProblemInterface):
     def task3(self, x0, alfa, gmin, kmax):
         xk = x0
         k, dfdx  = 0, 0
-        novo = []
+        novo, flist = [], []
 
         _, dfdx = self.task2(xk, gmin)
         """ math.fabs is used to get the absolute value of the derivative """
         while k < kmax and math.fabs(dfdx) > gmin:
             f = math.exp(-xk) * xk * ((xk ** 2) - xk - 1)
             novo.append([dfdx,xk,f])
+            flist.append(f)
             xk, dfdx = self.task2(xk, alfa)
             k += 1
 
-        # ATENÇÃO: revisar o valor de xk, que não está batendo com o valor da tabela apresentada
-        # pode ser que o xk aqui, seja o próximo valor de x
         self.plot_3(database=novo)
-        messenger = "The minimum value found for the function f(x) is y= %0.4f x= %0.4f"
-        return print( messenger % (f, xk))
+        min_pos = flist.index(min(flist))
+        messenger = "The minimum value found for the function f(x) is y= %0.4f from x= %0.4f"
+        return print( messenger % (min(flist), novo[min_pos][1]))
 
 
     # (a) Use o método de diferenças finitas para aproximar o gradiente.
@@ -109,6 +104,8 @@ class PrimeiroTrabalho(ProblemInterface):
             y.append(f)
             xaxis.append(x)
 
+        #ax.plot(bins, y, 'k--', linewidth=1.5, label='Theoretical')
+        plt.plot(X27, ypred, 'ro', label=f"acurácia: {acuracia}", alpha=0.5)
         plt.plot(xaxis, y)
         plt.xlim(-10, 10)
         plt.ylim(-20, 10)
@@ -118,6 +115,6 @@ class PrimeiroTrabalho(ProblemInterface):
     def plot_3(self, database):
         newnovo = pd.DataFrame(database,index=None,columns=['Derivada:','X:','Y:'])
         print(newnovo.to_string())
-        newnovo.plot(x ='X:', y='Y:',c='Derivada:', kind = 'scatter',colormap="Reds")
+        newnovo.plot(x ='X:', y='Y:',c='Derivada:', kind = 'scatter',colormap="Blues")
         plt.show()
         pass

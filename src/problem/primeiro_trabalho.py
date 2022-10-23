@@ -31,7 +31,6 @@ class PrimeiroTrabalho(ProblemInterface):
     def task1(self, x0, alfa, h):
         xk = x0
         for k in range(1):
-            # fx = self.function_exercise(xk)
             df = self.dfx(xk, h)
             xk = xk - (alfa * df)
         return xk
@@ -98,9 +97,27 @@ class PrimeiroTrabalho(ProblemInterface):
         return fx1x2
 
     # (b) Use o gradiente explícito no algoritmo da descida de gradiente
-    def task4_b(self):
-        # TODO
-        return print('task4_b')
+    def task4_b(self, w1, w2):
+        x1 = Symbol('x1')
+        x2 = Symbol('x2')
+        f = (4 - 2.1 * x1 ** 2 + x1 ** 3 / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
+
+        """derivada da fx/dx1"""
+        difx1 = diff(f, x1)  # dfx1 is the derivative of the function
+        lam_f1 = lambdify(x1, difx1)
+        dfdx1 = lam_f1(w1)
+        func = lambdify(x2, dfdx1)
+        dfdw1 = func(w2)
+
+        """derivada da fx/dx2"""
+        difx2 = diff(f, x2)  # dfx2 is the derivative of the function
+        lam_f2 = lambdify(x2, difx2)
+        dfdx2 = lam_f2(w2)
+        func = lambdify(x1, dfdx2)
+        dfdw2 = func(w1)
+
+        # xk = x0 - (alfa * dfdx)  # x_(k+1) <-  xk - alfa * f'(xk)
+        return dfdw1, dfdw2, difx1, difx2
 
     # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.

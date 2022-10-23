@@ -79,11 +79,32 @@ class PrimeiroTrabalho(ProblemInterface):
 
 
     # (a) Use o método de diferenças finitas para aproximar o gradiente.
+    def diferencas_finitas_duas_variaveis(self, initialp, alpha, gmin, kmax, h):
+        k = 0
+        x = np.array(initialp)
+        data_fx1x2,flist = [], []
+
+        fx1x2 = self.task4_function(x[0], x[1])
+        data_fx1x2.append([x[0], x[1], fx1x2])
+        flist.append(fx1x2)
+        """ math.fabs is used to get the absolute value of the derivative """
+        while k < kmax: # and math.fabs(dfdx) > gmin:
+            grad = self.task4_a(x, h)
+            prod = alpha *  grad
+            x = x - prod
+
+            fx1x2 = self.task4_function(x[0],x[1])
+            data_fx1x2.append([x[0], x[1], fx1x2])
+            flist.append(fx1x2)
+            k += 1
+        print(data_fx1x2)
+        return
+
     def task4_a(self, Xk, h):
         X = Xk
         dfdx1 = self.dfx_4(X[0], X[1], h, 0)
         dfdx2 = self.dfx_4(X[0], X[1], 0, h)
-        return dfdx1, dfdx2
+        return np.array([dfdx1, dfdx2])
 
     def dfx_4(self, x1, x2, h1, h2):
         """ Approximation of the derivative by the finite difference method """
@@ -122,9 +143,6 @@ class PrimeiroTrabalho(ProblemInterface):
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
     def task4_c(self):
 
-
-
-
         #self.plot_question4()
         self.graf3d()
         return print('task4_c')
@@ -141,13 +159,14 @@ class PrimeiroTrabalho(ProblemInterface):
         #ax.contour3D(x1, x2, Z, 50, cmap='coolwarm')
         ax.plot_surface(x1, x2, Z, cmap="coolwarm", lw=0.5, rstride=1, cstride=1)
 
-        #ax.set_title('Gráfico 3D', fontsize=18)
         ax.set_xlabel(r'X1', fontsize=10)
         ax.set_ylabel(r'X2', fontsize=10)
         ax.set_zlabel(r'f(X1, X2)', fontsize=10)
         ax.view_init(70, 35)
         plt.show()
         pass
+
+
 
     def plot(self):
         """Generate the points from the function"""
@@ -205,7 +224,7 @@ class PrimeiroTrabalho(ProblemInterface):
         figure = plt.figure()
         axis = figure.gca(projection='3d')
         axis.plot_surface(x1, x2, resul, cmap='jet' ,linewidth=0, antialiased=False)
-        plt.suptitle('Exercício 0', fontsize=14, fontweight='bold')
+
         plt.title('Gradiente Decedente Multivariado')
         plt.xlabel('X1')
         plt.ylabel('X2')

@@ -11,7 +11,6 @@ from mpl_toolkits import mplot3d
 
 
 
-
 class PrimeiroTrabalho(ProblemInterface):
 
     def __init__(self, fname):
@@ -72,7 +71,7 @@ class PrimeiroTrabalho(ProblemInterface):
             xk, dfdx = self.task2(xk, alfa)
             k += 1
 
-        self.plot(database=novo)
+        #self.plot()
         self.plot_3(database=novo)
         min_pos = flist.index(min(flist))
         messenger = "Tarefa 3.a \nThe minimum value found for the function f(x) is y= %0.4f from x= %0.4f"
@@ -122,7 +121,12 @@ class PrimeiroTrabalho(ProblemInterface):
     # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
     def task4_c(self):
-        # self.plot_question4()
+
+
+
+
+        #self.plot_question4()
+        self.graf3d()
         return print('task4_c')
 
     def plot_question4(self):
@@ -145,38 +149,67 @@ class PrimeiroTrabalho(ProblemInterface):
         plt.show()
         pass
 
-    def plot(self, database):
+    def plot(self):
         """Generate the points from the function"""
         y, xaxis = [], []
-        for x in np.arange(-10.0, 40.0, 0.05):
+
+        for x in np.arange(-4.0, 4.0, 0.01):
             f = exp(-x) * x * ((x ** 2) - x - 1)
             y.append(f)
             xaxis.append(x)
 
-        plt.subplots()
-        plt.plot(xaxis, y, label= r'$f ~ (x) = e^{-x} (x^3- x^2 - x)$')
-        plt.xlabel(r'$x$')
-        plt.ylabel(r'$f ~ (x)$')
-
-        plt.grid(True, color='gray', linestyle = '--', linewidth = 0.5)
-        plt.legend(title='Function')
-        plt.text(-0.6, 0.6,  r'$x_0 = 3$    $\alpha = 0.1$    $K_{max} = 100$',
-                 bbox={'facecolor': 'white', 'edgecolor': 'k', 'boxstyle': 'round, pad=1'})
-        plt.title('Function representation')
-
-        """ limit of x and y axis"""
-        plt.xlim(-1, 4)
+        plt.plot(xaxis, y, alpha=0.95)
+        plt.xlim(-1, 3.5)
         plt.ylim(-0.5, 1)
-
-        plt.savefig("Image/first_function.png")
-        plt.show()
-        plt.close()
         pass
 
     def plot_3(self, database):
-        newnovo = pd.DataFrame(database,index=None,columns=['Derivative','X','$f~(x)$'])
-        print(newnovo)
-        newnovo.plot(x ='X', y='$f~(x)$',c='Derivative', kind = 'scatter',colormap="Blues")
-        plt.title("Gradient descent")
+
+        newnovo = pd.DataFrame(database, index=None, columns=['Derivada', 'X', 'f(x)'])
+        newnovo.plot(x='X', y='f(x)', c='Derivada', kind='scatter', cmap="jet", s=50, marker='o',
+                     alpha=0.7, label= r'$f ~ (x) = e^{-x} (x^3- x^2 - x)$')
+
+        """Gera os pontos da função para depois acrescentar sobre a curva os pontos, da derivada
+        da função """
+        self.plot()
+
+        plt.title('Descida de Gradiente')
+        plt.xlabel('x')
+        plt.ylabel('f(x)')
+
+        """
+        Vale a pena por essa informação no relatório:
+        
+        plt.text(-0.5, 0.6, 'Quanto maior o Valor da Derivada, maior é o passo.\n kmax = 100, porém foi até 49 pois \n o critério de gimin=0.1 ocorreu primeiro',
+                 style='italic',
+                 bbox={'facecolor': 'white', 'edgecolor': 'k', 'boxstyle': 'round, pad=1'})
+        """
+        plt.text(-0.6, 0.6, r'$x_0 = 3$    $\alpha = 0.1$    $K_{max} = 100$',
+                 bbox={'facecolor': 'white', 'edgecolor': 'k', 'boxstyle': 'round, pad=1'})
+
+        plt.annotate(
+            'Mínimo local:\n x=' + str(round(newnovo['X'][49], 4)) + '\n f(x)=' + str(round(newnovo['f(x)'][49], 4)),
+            xy=(newnovo['X'][49], -0.404), xytext=(0.5, 0.2),
+            arrowprops=dict(facecolor='gray', shrink=0.05))
+
+        plt.savefig("Image/first_function.png")
         plt.show()
         pass
+
+    def graf3d(self):
+        min, max = -1.0, 1.0
+        xaxis = np.arange(min, max, 0.01)
+        yaxis = np.arange(min, max, 0.01)
+        x1, x2 = np.meshgrid(xaxis, yaxis)
+        resul = (4-2.1*x1**2+x1**(3/3))*x1**3+x1*x2+(-4+4*x2**2)*x2**2
+        figure = plt.figure()
+        axis = figure.gca(projection='3d')
+        axis.plot_surface(x1, x2, resul, cmap='jet' ,linewidth=0, antialiased=False)
+        plt.suptitle('Exercício 0', fontsize=14, fontweight='bold')
+        plt.title('Gradiente Decedente Multivariado')
+        plt.xlabel('X1')
+        plt.ylabel('X2')
+        axis.set_zlabel('f(x1,x2)')
+        plt.contourf(x1, x2, resul, levels=50, cmap='jet',zdir="z", offset=-3)
+        plt.show()
+    pass

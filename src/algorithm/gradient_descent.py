@@ -36,14 +36,13 @@ def gradient_descent(problem):
         x_0 --> x_1 --> x_2 --> x_3 --> x_4 --> x_5 ...
         e f(x_0) --> f(x_1) --> f(x_2) --> f(x_3) --> f(x_4) --> f(x_5) ...
         e f'(x_0) --> f'(x_1) --> f'(x_2) --> f'(x_3) --> f'(x_4) --> f'(x_5) ..."""
-    #problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=100)
+    problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=100)
 
 
     """
         Plot the graph representing the function in question 1 and 2.
         It was not requested by the activity, but I believe it is interesting
          to know a little more about the feature of the function"""
-    #problem.plot()
 
     """ 4. Determine pelo menos dois mínimos da função bidimensional:
     f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2
@@ -54,7 +53,6 @@ def gradient_descent(problem):
     print("Dada a função: f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2\n")
 
 
-
     point, h = [2, 2], 0.01
     dfdx1, dfdx2 = problem.task4_a(Xk=point, h=h)
     print("Tarefa 4a: Aproximado o gradiente pelo método de diferenças finitas.\n"
@@ -62,13 +60,12 @@ def gradient_descent(problem):
     print('')
 
     # (b) Use o gradiente explícito no algoritmo da descida de gradiente
-    dfdx1, dfdx2, difx1, difx2 = problem.task4_b(w1=2, w2=2)
+
+    dfdx1, dfdx2, difx1, difx2 = problem.task4_b(w1=point[0], w2=point[1])
 
     print("Tarefa 4b: O gradiente explícito da função é dado por:\n[%s       %s]\n"
           "No ponto (2, 2) é: [%0.3f  %0.3f]." % (difx1, difx2, dfdx1, dfdx2))
     print('')
-
-
 
     # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.

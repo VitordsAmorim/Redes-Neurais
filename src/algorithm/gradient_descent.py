@@ -53,8 +53,10 @@ def gradient_descent(problem):
     print("f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2\n")
 
     point = [1, 1]  # pontos iniciais
-    problem.diferencas_finitas_duas_variaveis(point, alpha=0.1, gmin=0.1, kmax=100, h=0.01)
+    problem.diferencas_finitas_duas_variaveis(point, alpha=0.05, gmin=0.1, kmax=50, h=0.01)
 
+    """Essa função é pesada, vale a pena deixá-la como comentário"""
+    problem.make_gif(frame_folder='Image/gif/')
 
     # dfdx1, dfdx2 = problem.task4_a(Xk=point, h=h)
     #print("Tarefa 4a: Aproximado o gradiente pelo método de diferenças finitas.\n"

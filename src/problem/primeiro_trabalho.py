@@ -8,6 +8,8 @@ import matplotlib as mpl
 import pandas as pd
 import math
 from mpl_toolkits import mplot3d
+import glob
+from PIL import Image
 
 
 
@@ -87,8 +89,9 @@ class PrimeiroTrabalho(ProblemInterface):
         fx1x2 = self.task4_function(x[0], x[1])
         data_fx1x2.append([x[0], x[1], fx1x2])
         flist.append(fx1x2)
+        grad = self.task4_a(x, h)
         """ math.fabs is used to get the absolute value of the derivative """
-        while k < kmax: # and math.fabs(dfdx) > gmin:
+        while k < kmax and np.linalg.norm(grad) > gmin:
             grad = self.task4_a(x, h)
             prod = alpha *  grad
             x = x - prod
@@ -96,8 +99,10 @@ class PrimeiroTrabalho(ProblemInterface):
             fx1x2 = self.task4_function(x[0],x[1])
             data_fx1x2.append([x[0], x[1], fx1x2])
             flist.append(fx1x2)
+            print(k)
             k += 1
-        print(data_fx1x2)
+        self.plot_lossfunction(data_fx1x2)
+
         return
 
     def task4_a(self, Xk, h):
@@ -166,7 +171,63 @@ class PrimeiroTrabalho(ProblemInterface):
         plt.show()
         pass
 
+    def plot_lossfunction(self, database):
 
+        """ O resultado, resul, apresenta o valor da função que queremos minimizar
+        ao realizar o método da descida de gradientes. Logo, a sequência de valores de x1 e x2
+        escolhidos, indicam o caminho que percorre a busca pela melhor solução"""
+        dados = np.array(database)
+        xaxis, yaxis = dados[ : , 0:1], dados[ : , 1:2]
+        xaxis, yaxis = np.reshape(xaxis, -1), np.reshape(yaxis, -1)
+        resul = dados[:, 2:3]
+        resul = np.reshape(resul, -1)
+        w1, w2 = xaxis, yaxis
+
+        fig = plt.figure()
+        #ax = fig.add_subplot(projection='3d')
+        #ax.plot(xaxis, yaxis, resul, color="black")
+
+        min, max = -1.5, 1.5
+        xaxis, yaxis = np.arange(min, max, 0.01), np.arange(min, max, 0.01)
+        x1, x2 = np.meshgrid(xaxis, yaxis)
+        resul = (4 - 2.1 * x1 ** 2 + (x1 ** 3) / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
+
+        #axis = fig.gca(projection='3d')
+        #axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False)
+
+        #plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy',zdir="z", offset=-3)
+
+
+        # Agora vem a mágica
+
+        print("")
+        adc = str(0)
+        for i in range(0, len(w1), 1):
+            tamanho = len(xaxis)
+            if i == 10:
+                adc = ""
+
+            xc = float(w1[i:i+1])
+            yc = float(w2[i:i+1])
+            plt.title('Descida de gradiente')
+            plt.xlabel('X1')
+            plt.ylabel('X2')
+            plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy', zdir="z", offset=-3)
+            plt.plot(xc, yc, marker="d", markersize=4, markeredgecolor="black", markerfacecolor="green")
+            plt.savefig("Image/gif/" + adc + str(i) + ".png")
+            plt.clf()
+            #print(i)
+
+        #ax.set_zlabel('f(x1,x2)')
+        #plt.show()
+        return
+
+    def make_gif(self, frame_folder):
+        frames = [Image.open(image) for image in sorted(glob.glob(f"{frame_folder}/*.png"))]
+
+        frame_one = frames[0]
+        frame_one.save("Image/my_awesome.gif", format="GIF", append_images=frames,
+                       save_all=True, duration=400, loop=0)
 
     def plot(self):
         """Generate the points from the function"""
@@ -220,7 +281,7 @@ class PrimeiroTrabalho(ProblemInterface):
         xaxis = np.arange(min, max, 0.01)
         yaxis = np.arange(min, max, 0.01)
         x1, x2 = np.meshgrid(xaxis, yaxis)
-        resul = (4-2.1*x1**2+x1**(3/3))*x1**3+x1*x2+(-4+4*x2**2)*x2**2
+        resul = (4-2.1*x1**2+(x1**3)/3)*x1**3+x1*x2+(-4+4*x2**2)*x2**2
         figure = plt.figure()
         axis = figure.gca(projection='3d')
         axis.plot_surface(x1, x2, resul, cmap='jet' ,linewidth=0, antialiased=False)

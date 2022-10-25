@@ -1,8 +1,6 @@
 import numpy as np
 from src.problem.problem_interface import ProblemInterface
-from sympy import diff, Symbol
-from sympy import lambdify
-from sympy import sin, cos, exp
+from sympy import diff, Symbol, lambdify, sin, cos, exp
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pandas as pd
@@ -15,17 +13,6 @@ from PIL import Image
 class PrimeiroTrabalho(ProblemInterface):
 
     def __init__(self, fname):
-        # load dataset
-        """self.filename = fname
-        with open(fname, "r") as f:
-            lines = f.readlines()
-
-        lines = [l.rstrip().rsplit() for l in lines]
-
-        # Convert the list of list into a numpy matrix of integers.
-        lines = np.array(lines).astype(np.int)
-        self.x = lines[:, :-1]
-        self.y = lines[:, -1:]"""
         pass
 
     def task1(self, x0, alfa, h):
@@ -40,7 +27,8 @@ class PrimeiroTrabalho(ProblemInterface):
         return fx
 
     def dfx(self, x, h):
-        """ Approximation of the derivative by the finite difference method """
+        """ Approximation of the derivative by the finite difference method
+            for one variable """
         df = (self.function_exercise(x + h) - self.function_exercise(x)) / h
         return df
 
@@ -83,7 +71,7 @@ class PrimeiroTrabalho(ProblemInterface):
             k += 1
 
         """Plots the function, and the value of the derivative associated with its coordinates."""
-        # self.plot_3(database=novo)
+        self.plot_3(database=novo)
 
         resul = np.array(novo)
         resul = np.reshape(resul[:, 2:3],-1)
@@ -95,21 +83,41 @@ class PrimeiroTrabalho(ProblemInterface):
         print(messenger % (min(resul), novo[pos_minimo][1]) + '\n')
         return
 
-    # (a) Use o método de diferenças finitas para aproximar o gradiente.
     def diferencas_finitas_duas_variaveis(self, initialp, alpha, gmin, kmax, h):
+        """ This function implements algorithm 4, presented in the book,
+            "Aprendizagem de Máquina", page 93, author: Thomas Rauber.
+
+            "Algoritmo 4: Descida de Gradiente, Mais que uma Dimensão"
+
+            ! It is worth mentioning that the derivative here is
+              calculated using the Finite Differences Method to
+              calculate the derivative.!
+            """
+
+        """ k    -> represents the iterations
+            x   -> represents the initial value of x1 and x2
+            data_fx1x2 -> list to store the values of f(x1,x2)"""
         k, x = 0, np.array(initialp)
-        data_fx1x2, flist = [], []
+        data_fx1x2 = []
+
+        """Receives the values of X1 and X2 and returns f(X1, X2)"""
         fx1x2 = self.task4_function(x[0], x[1])
         data_fx1x2.append([x[0], x[1], fx1x2])
-        flist.append(fx1x2)
+
+        """Calculates the gradient vector, that is, the partial
+           derivatives with respect to X1 and X2
+           grad -> It's the gradient vector """
         grad = self.task4_a(x, h)
+
         while k < kmax and np.linalg.norm(grad) > gmin:
-            grad = self.task4_a(x, h)
+            """ The next steps were written in this way to be able 
+                to evaluate the result of the multiplications in the
+                algorithm, during the debug."""
+            grad = self.task4_a(x, h) # calculate the gradient vector
             prod = alpha * grad
             x = x - prod
-            fx1x2 = self.task4_function(x[0], x[1])
-            data_fx1x2.append([x[0], x[1], fx1x2])
-            flist.append(fx1x2)
+            fx1x2 = self.task4_function(x[0], x[1])  # returns f(X1, X2)
+            data_fx1x2.append([x[0], x[1], fx1x2])   # save the values of f(X1, X2)
             k += 1
         self.plot_lossfunction(data_fx1x2)
         return
@@ -236,21 +244,24 @@ class PrimeiroTrabalho(ProblemInterface):
         frame_one.save("Image/my_awesome.gif", format="GIF", append_images=frames,
                        save_all=True, duration=400, loop=0)
 
-    def plot(self):
+    def plot_question3(self):
         """Generate the points from the function"""
         y, xaxis = [], []
-
         for x in np.arange(-4.0, 4.0, 0.01):
             f = exp(-x) * x * ((x ** 2) - x - 1)
-            y.append(f)
-            xaxis.append(x)
+            y.append(f), xaxis.append(x)
 
         plt.plot(xaxis, y, alpha=0.95)
-        plt.xlim(-1, 3.5)
-        plt.ylim(-0.5, 1)
+        plt.xlim(-1, 3.5), plt.ylim(-0.5, 1)
         pass
 
     def plot_3(self, database):
+
+        """Converts the database into a DataFrame, where the value and x1, x2 and
+            corresponding derivative are present. Subsequently, the
+            self.plot_question3() function is called, where the graph of the
+            corresponding function in the interval is plotted. Then, an overlap
+            of plots occurs."""
 
         newnovo = pd.DataFrame(database, index=None, columns=['Derivada', 'X', 'f(x)'])
         newnovo.plot(x='X', y='f(x)', c='Derivada', kind='scatter', cmap="jet", s=50, marker='o',
@@ -258,7 +269,7 @@ class PrimeiroTrabalho(ProblemInterface):
 
         """Gera os pontos da função para depois acrescentar sobre a curva os pontos, da derivada
         da função """
-        self.plot()
+        self.plot_question3()
 
         plt.title('Descida de Gradiente')
         plt.xlabel('x'), plt.ylabel('f(x)')
@@ -286,9 +297,7 @@ class PrimeiroTrabalho(ProblemInterface):
         axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False)
 
         plt.title('Gradiente Decedente Multivariado')
-        plt.xlabel('X1')
-        plt.ylabel('X2')
-        axis.set_zlabel('f(x1,x2)')
+        plt.xlabel('X1'), plt.ylabel('X2'), axis.set_zlabel('f(x1,x2)')
         plt.contourf(x1, x2, resul, levels=50, cmap='jet', zdir="z", offset=-3)
         plt.show()
     pass

@@ -30,5 +30,5 @@ class ProblemInterface(ABC):
         pass
 
     @abstractmethod
-    def plot(self):
+    def plot_question3(self):
         pass

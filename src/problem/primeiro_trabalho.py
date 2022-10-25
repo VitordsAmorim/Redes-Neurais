@@ -76,14 +76,14 @@ class PrimeiroTrabalho(ProblemInterface):
         resul = np.array(novo)
         resul = np.reshape(resul[:, 2:3],-1)
 
-        # Returns the index of the smallest value found
+        """Returns the index of the smallest value found"""
         pos_minimo = int(np.where(resul == min(resul))[0])
 
         messenger = "Tarefa 3.a \nThe minimum value found for the function f(x) is %0.4f from x= %0.4f"
         print(messenger % (min(resul), novo[pos_minimo][1]) + '\n')
         return
 
-    def diferencas_finitas_duas_variaveis(self, initialp, alpha, gmin, kmax, h):
+    def gradiente_duas_variaveis(self, initialp, alpha, gmin, kmax, h):
         """ This function implements algorithm 4, presented in the book,
             "Aprendizagem de Máquina", page 93, author: Thomas Rauber.
 
@@ -109,37 +109,53 @@ class PrimeiroTrabalho(ProblemInterface):
            grad -> It's the gradient vector """
         grad = self.task4_a(x, h)
 
+        """np.linalg.norm(grad) -> represents the norm of the gradient vector """
         while k < kmax and np.linalg.norm(grad) > gmin:
-            """ The next steps were written in this way to be able 
-                to evaluate the result of the multiplications in the
-                algorithm, during the debug."""
             grad = self.task4_a(x, h) # calculate the gradient vector
             prod = alpha * grad
             x = x - prod
             fx1x2 = self.task4_function(x[0], x[1])  # returns f(X1, X2)
             data_fx1x2.append([x[0], x[1], fx1x2])   # save the values of f(X1, X2)
             k += 1
-        self.plot_lossfunction(data_fx1x2)
-        return
+
+        # Data necessary to answer question 4a of the list
+        minimo_fx1x2_mdf2 = np.array(data_fx1x2)[len(data_fx1x2)-1:len(data_fx1x2)]
+
+        k, x = 0, np.array(initialp)
+        data_fx1x2_literal = []
+        
+        fx1x2 = self.task4_function(x[0], x[1])
+        data_fx1x2_literal.append([x[0], x[1], fx1x2])
+        grad = self.task4_b(x)
+        while k < kmax and np.linalg.norm(grad) > gmin:
+            grad = self.task4_b(x)
+            x = x - alpha * grad
+            fx1x2 = self.task4_function(x[0], x[1])
+            data_fx1x2_literal.append([x[0], x[1], fx1x2])
+            k += 1
+        # Data necessary to answer question 4b of the list
+        minimo_fx1x2_dliteral = np.array(data_fx1x2_literal)[len(data_fx1x2_literal) - 1:len(data_fx1x2_literal)]
+
+        #self.plot_lossfunction(data_fx1x2, data_fx1x2_literal)
+        return minimo_fx1x2_mdf2, minimo_fx1x2_dliteral
 
     def task4_a(self, Xk, h):
-        X = Xk
-        dfdx1 = self.dfx_4(X[0], X[1], h, 0)
-        dfdx2 = self.dfx_4(X[0], X[1], 0, h)
+        """Calculates the gradient vector by the finite difference method"""
+        dfdx1 = self.dfx_4(Xk[0], Xk[1], h, 0)
+        dfdx2 = self.dfx_4(Xk[0], Xk[1], 0, h)
         return np.array([dfdx1, dfdx2])
 
+
     def dfx_4(self, x1, x2, h1, h2):
-        """ Approximation of the derivative by the finite difference method """
-        """ In this case, for two variables"""
-        df = (self.task4_function(x1 + h1, x2 + h2) - self.task4_function(x1, x2)) / (h1 + h2)
-        return df
+        """ Approximation of the derivative by the finite difference method.
+        In this case, for two variables """
+        return (self.task4_function(x1 + h1, x2 + h2) - self.task4_function(x1, x2)) / (h1 + h2)
 
     def task4_function(self, x1, x2):
         fx1x2 = (4 - 2.1 * x1 ** 2 + x1 ** 3 / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
         return fx1x2
 
-    # (b) Use o gradiente explícito no algoritmo da descida de gradiente
-    def task4_b(self, w1, w2):
+    def task4_b(self, Xk):
         x1 = Symbol('x1')
         x2 = Symbol('x2')
         f = (4 - 2.1 * x1 ** 2 + x1 ** 3 / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
@@ -147,19 +163,19 @@ class PrimeiroTrabalho(ProblemInterface):
         """derivada da fx/dx1"""
         difx1 = diff(f, x1)  # dfx1 is the derivative of the function
         lam_f1 = lambdify(x1, difx1)
-        dfdx1 = lam_f1(w1)
+        dfdx1 = lam_f1(Xk[0])
         func = lambdify(x2, dfdx1)
-        dfdw1 = func(w2)
+        dfdw1 = func(Xk[1])
 
         """derivada da fx/dx2"""
         difx2 = diff(f, x2)  # dfx2 is the derivative of the function
         lam_f2 = lambdify(x2, difx2)
-        dfdx2 = lam_f2(w2)
+        dfdx2 = lam_f2(Xk[1])
         func = lambdify(x1, dfdx2)
-        dfdw2 = func(w1)
+        dfdw2 = func(Xk[0])
 
         # xk = x0 - (alfa * dfdx)  # x_(k+1) <-  xk - alfa * f'(xk)
-        return dfdw1, dfdw2, difx1, difx2
+        return np.array([dfdw1, dfdw2])
 
     # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
@@ -199,39 +215,57 @@ class PrimeiroTrabalho(ProblemInterface):
         plt.show()
         pass
 
-    def plot_lossfunction(self, database):
+    def plot_lossfunction(self, database, database_dliteral):
 
         """ O resultado, resul, apresenta o valor da função que queremos minimizar
         ao realizar o método da descida de gradientes. Logo, a sequência de valores de x1 e x2
         escolhidos, indicam o caminho que percorre a busca pela melhor solução"""
+
         dados = np.array(database)
-        xaxis, yaxis = dados[:, 0:1], dados[:, 1:2]
-        xaxis, yaxis = np.reshape(xaxis, -1), np.reshape(yaxis, -1)
-        resul = dados[:, 2:3]
-        resul = np.reshape(resul, -1)
+        xaxis, yaxis, resul = dados[:, 0:1], dados[:, 1:2], dados[:, 2:3]
+        xaxis, yaxis, resul = np.reshape(xaxis, -1), np.reshape(yaxis, -1), np.reshape(resul, -1)
         w1, w2 = xaxis, yaxis
 
-        fig = plt.figure()
+        xaxis, yaxis = np.array(database_dliteral)[:, 0:1], np.array(database_dliteral)[:, 1:2]
+        xaxis, yaxis  = np.reshape(xaxis, -1), np.reshape(yaxis, -1)
+        l1, l2 = xaxis, yaxis
+
+        """ Define the parameters and how much of the domain of the function
+            you want to plot the contour line"""
+        fig = plt.figure()  # Create the figure
         min, max = -1.5, 1.5
         xaxis, yaxis = np.arange(min, max, 0.01), np.arange(min, max, 0.01)
         x1, x2 = np.meshgrid(xaxis, yaxis)
         resul = (4 - 2.1 * x1 ** 2 + (x1 ** 3) / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
 
-        chave = False
+        """ Added to not have to put this part of the algorithm as a comment often,
+            because it's heavy"""
+        chave = True
         if chave == True:
             adc = str(0)
             for i in range(0, len(w1), 1):
                 tamanho = len(xaxis)
-                """ Importante para salvar as imagens de forma ordenada"""
+
+                """ Important to save the images in an orderly way """
                 if i == 10:
                     adc = ""
-                xc = float(w1[i:i + 1])
-                yc = float(w2[i:i + 1])
+
                 plt.title('Descida de gradiente')
-                plt.xlabel('X1')
-                plt.ylabel('X2')
+                plt.xlabel('X1'), plt.ylabel('X2')
+
+                """ xc, yc -> represent the coordinates of the points
+                    of a solution. It is done iteratively so that several
+                    images are plotted, and then a gif is created """
+                xc, yc = float(w1[i:i + 1]), float(w2[i:i + 1])
+                l1c, l2c = float(l1[i:i + 1]), float(l2[i:i + 1])
+
+                """ Plot the contour and then the point"""
                 plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy')
-                plt.plot(xc, yc, marker="d", markersize=6, markeredgecolor="black", markerfacecolor="green")
+                plt.plot(xc, yc,   marker="o", markersize=5, markeredgecolor="black",
+                         markerfacecolor="green")
+                plt.plot(l1c, l2c, marker="d", markersize=5, markeredgecolor="black",
+                         markerfacecolor="orange")
+
                 plt.savefig("Image/gif/" + adc + str(i) + ".png")
                 plt.clf()
         plt.close(fig)

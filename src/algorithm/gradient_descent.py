@@ -1,4 +1,5 @@
 # Call the functions in the Descida_de_gradiante file
+import numpy as np
 from sympy import diff, Symbol
 
 def gradient_descent(problem):
@@ -27,7 +28,7 @@ def gradient_descent(problem):
         x_0 --> x_1 --> x_2 --> x_3 --> x_4 --> x_5 ...
         e f(x_0) --> f(x_1) --> f(x_2) --> f(x_3) --> f(x_4) --> f(x_5) ...
         e f'(x_0) --> f'(x_1) --> f'(x_2) --> f'(x_3) --> f'(x_4) --> f'(x_5) ..."""
-    problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=100)
+    # problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=100)
 
 
     """
@@ -36,34 +37,36 @@ def gradient_descent(problem):
          to know a little more about the feature of the function"""
 
     """ 4. Determine pelo menos dois mínimos da função bidimensional:
-    f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2
+        f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2
+        
+        (a) Use o método de diferenças finitas para aproximar o gradiente.
     """
 
-    # (a) Use o método de diferenças finitas para aproximar o gradiente.
     print("Questão 4")
     print("f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2\n")
 
     point = [1, 1]  # Starting points
-    problem.diferencas_finitas_duas_variaveis(point, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
+    fx1x2_mdf, fx1x2_dliteral = problem.gradiente_duas_variaveis(point, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
+    print("       X1           X2        f(x1,x2)  Ponto Inicial")
+    print(fx1x2_mdf, point, ": Método das diferenças finitas")
+    print(fx1x2_dliteral, point, ": Método Literal para o cálculo da derivada\n")
 
-    """Essa função é pesada, vale a pena deixá-la como comentário"""
-    #problem.make_gif(frame_folder='Image/gif/')
+    point = [-0.5, -0.5]
+    fx1x2_mdf, fx1x2_dliteral = problem.gradiente_duas_variaveis(point, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
+    print(fx1x2_mdf, point, ": Método das diferenças finitas")
+    print(fx1x2_dliteral, point, ": Método Literal para o cálculo da derivada")
 
-    # dfdx1, dfdx2 = problem.task4_a(Xk=point, h=h)
-    #print("Tarefa 4a: Aproximado o gradiente pelo método de diferenças finitas.\n"
-    #      "No ponto (2, 2) é: [%0.3f  %0.3f]." % (dfdx1, dfdx2))
-    #print('')
+    # colocar o código acima num for, para ir fazendo o calculo de acordo
+    # com novas posições iniciais
+    # conseguir salvar os valores de casa iteração
+    # depois plotar um gráfico com vários pontos iniciasi percorrendo ao mesmo tempo.
 
-
-    # (b) Use o gradiente explícito no algoritmo da descida de gradiente
-    #dfdx1, dfdx2, difx1, difx2 = problem.task4_b(w1=point[0], w2=point[1])
-
-    #print("Tarefa 4b: O gradiente explícito da função é dado por:\n[%s       %s]\n"
-    #      "No ponto (2, 2) é: [%0.3f  %0.3f]." % (difx1, difx2, dfdx1, dfdx2))
-    #print('')
 
     # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
     #problem.task4_c()
+
+    """Essa função é pesada, vale a pena deixá-la como comentário"""
+    #problem.make_gif(frame_folder='Image/gif/')
 
     return [print("Fim")]

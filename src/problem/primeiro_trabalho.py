@@ -12,7 +12,6 @@ import glob
 from PIL import Image
 
 
-
 class PrimeiroTrabalho(ProblemInterface):
 
     def __init__(self, fname):
@@ -42,67 +41,77 @@ class PrimeiroTrabalho(ProblemInterface):
 
     def dfx(self, x, h):
         """ Approximation of the derivative by the finite difference method """
-        df = (self.function_exercise(x + h) - self.function_exercise(x))/h
+        df = (self.function_exercise(x + h) - self.function_exercise(x)) / h
         return df
 
-
     def task2(self, x0, alfa):
+        """ This function implements algorithm 3, presented in the book,
+         "Aprendizagem de Máquina", page 90, author: Thomas Rauber.
+
+         Algoritmo 3: Descida de Gradiente, Uma Dimensão
+         """
         x = Symbol('x')
         f = exp(-x) * x * ((x ** 2) - x - 1)
         difx = diff(f, x)  # dfx is the derivative of the function
 
         """ Convert from a symbolic function to a numeric function """
         lam_f = lambdify(x, difx)
-        dfdx = lam_f(x0) # Solve the function for a given value of x
-        xk = x0 - (alfa * dfdx)  # x_(k+1) <-  xk - alfa * f'(xk)
+        dfdx = lam_f(x0)  # Solve the function for a given value of x
+        xk = x0 - (alfa * dfdx)
         return xk, dfdx
 
 
     def task3(self, x0, alfa, gmin, kmax):
-        xk = x0
-        k, dfdx  = 0, 0
-        novo, flist = [], []
+        """ k    -> represents the iterations
+            xk   -> represents the initial value of x
+            dfdx -> needed to be calculated before the loop in order for the stopping criterion to be set.
+        """
+        xk, k, dfdx = x0, 0, 0
+        novo = []
+        _, dfdx = self.task2(xk, alfa)
 
-        _, dfdx = self.task2(xk, gmin)
-
-        """ math.fabs is used to get the absolute value of the derivative """
+        """ math.fabs is used to get the absolute value of the derivative
+            kmax, gmin -> they are the hyperparameters(in this case: stopping criterion)
+        """
         while k < kmax and math.fabs(dfdx) > gmin:
             f = math.exp(-xk) * xk * ((xk ** 2) - xk - 1)
-            novo.append([dfdx,xk,f])
-            flist.append(f)
+            novo.append([dfdx, xk, f])
+
+            """task2 -> recebe como parâmetro o valor de x(xk) e alfa(taxa de aprendizagem)
+                        e retorna o novo valor para x, e a derivada correspondente """
             xk, dfdx = self.task2(xk, alfa)
             k += 1
 
-        #self.plot()
-        self.plot_3(database=novo)
-        min_pos = flist.index(min(flist))
-        messenger = "Tarefa 3.a \nThe minimum value found for the function f(x) is y= %0.4f from x= %0.4f"
-        return print( messenger % (min(flist), novo[min_pos][1])+'\n')
+        """Plots the function, and the value of the derivative associated with its coordinates."""
+        # self.plot_3(database=novo)
 
+        resul = np.array(novo)
+        resul = np.reshape(resul[:, 2:3],-1)
+
+        # Returns the index of the smallest value found
+        pos_minimo = int(np.where(resul == min(resul))[0])
+
+        messenger = "Tarefa 3.a \nThe minimum value found for the function f(x) is %0.4f from x= %0.4f"
+        print(messenger % (min(resul), novo[pos_minimo][1]) + '\n')
+        return
 
     # (a) Use o método de diferenças finitas para aproximar o gradiente.
     def diferencas_finitas_duas_variaveis(self, initialp, alpha, gmin, kmax, h):
-        k = 0
-        x = np.array(initialp)
-        data_fx1x2,flist = [], []
-
+        k, x = 0, np.array(initialp)
+        data_fx1x2, flist = [], []
         fx1x2 = self.task4_function(x[0], x[1])
         data_fx1x2.append([x[0], x[1], fx1x2])
         flist.append(fx1x2)
         grad = self.task4_a(x, h)
-        """ math.fabs is used to get the absolute value of the derivative """
         while k < kmax and np.linalg.norm(grad) > gmin:
             grad = self.task4_a(x, h)
-            prod = alpha *  grad
+            prod = alpha * grad
             x = x - prod
-
-            fx1x2 = self.task4_function(x[0],x[1])
+            fx1x2 = self.task4_function(x[0], x[1])
             data_fx1x2.append([x[0], x[1], fx1x2])
             flist.append(fx1x2)
-            print(k)
             k += 1
         self.plot_lossfunction(data_fx1x2)
-
         return
 
     def task4_a(self, Xk, h):
@@ -114,7 +123,7 @@ class PrimeiroTrabalho(ProblemInterface):
     def dfx_4(self, x1, x2, h1, h2):
         """ Approximation of the derivative by the finite difference method """
         """ In this case, for two variables"""
-        df = (self.task4_function(x1 + h1, x2 + h2) - self.task4_function(x1, x2))/(h1 + h2)
+        df = (self.task4_function(x1 + h1, x2 + h2) - self.task4_function(x1, x2)) / (h1 + h2)
         return df
 
     def task4_function(self, x1, x2):
@@ -148,9 +157,20 @@ class PrimeiroTrabalho(ProblemInterface):
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
     def task4_c(self):
 
-        #self.plot_question4()
+        # self.plot_question4()
         self.graf3d()
         return print('task4_c')
+
+
+
+
+
+    #********************************************
+    #
+    #   Daqui para baixo estão implementadas
+    #   as funções responsáveis por plotar
+    #   e exportar os arquivos
+    #
 
     def plot_question4(self):
 
@@ -161,7 +181,7 @@ class PrimeiroTrabalho(ProblemInterface):
 
         fig = plt.figure(figsize=(5, 5))
         ax = plt.axes(projection='3d')
-        #ax.contour3D(x1, x2, Z, 50, cmap='coolwarm')
+        # ax.contour3D(x1, x2, Z, 50, cmap='coolwarm')
         ax.plot_surface(x1, x2, Z, cmap="coolwarm", lw=0.5, rstride=1, cstride=1)
 
         ax.set_xlabel(r'X1', fontsize=10)
@@ -177,49 +197,36 @@ class PrimeiroTrabalho(ProblemInterface):
         ao realizar o método da descida de gradientes. Logo, a sequência de valores de x1 e x2
         escolhidos, indicam o caminho que percorre a busca pela melhor solução"""
         dados = np.array(database)
-        xaxis, yaxis = dados[ : , 0:1], dados[ : , 1:2]
+        xaxis, yaxis = dados[:, 0:1], dados[:, 1:2]
         xaxis, yaxis = np.reshape(xaxis, -1), np.reshape(yaxis, -1)
         resul = dados[:, 2:3]
         resul = np.reshape(resul, -1)
         w1, w2 = xaxis, yaxis
 
         fig = plt.figure()
-        #ax = fig.add_subplot(projection='3d')
-        #ax.plot(xaxis, yaxis, resul, color="black")
-
         min, max = -1.5, 1.5
         xaxis, yaxis = np.arange(min, max, 0.01), np.arange(min, max, 0.01)
         x1, x2 = np.meshgrid(xaxis, yaxis)
         resul = (4 - 2.1 * x1 ** 2 + (x1 ** 3) / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
 
-        #axis = fig.gca(projection='3d')
-        #axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False)
-
-        #plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy',zdir="z", offset=-3)
-
-
-        # Agora vem a mágica
-
-        print("")
-        adc = str(0)
-        for i in range(0, len(w1), 1):
-            tamanho = len(xaxis)
-            if i == 10:
-                adc = ""
-
-            xc = float(w1[i:i+1])
-            yc = float(w2[i:i+1])
-            plt.title('Descida de gradiente')
-            plt.xlabel('X1')
-            plt.ylabel('X2')
-            plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy', zdir="z", offset=-3)
-            plt.plot(xc, yc, marker="d", markersize=4, markeredgecolor="black", markerfacecolor="green")
-            plt.savefig("Image/gif/" + adc + str(i) + ".png")
-            plt.clf()
-            #print(i)
-
-        #ax.set_zlabel('f(x1,x2)')
-        #plt.show()
+        chave = False
+        if chave == True:
+            adc = str(0)
+            for i in range(0, len(w1), 1):
+                tamanho = len(xaxis)
+                """ Importante para salvar as imagens de forma ordenada"""
+                if i == 10:
+                    adc = ""
+                xc = float(w1[i:i + 1])
+                yc = float(w2[i:i + 1])
+                plt.title('Descida de gradiente')
+                plt.xlabel('X1')
+                plt.ylabel('X2')
+                plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy')
+                plt.plot(xc, yc, marker="d", markersize=6, markeredgecolor="black", markerfacecolor="green")
+                plt.savefig("Image/gif/" + adc + str(i) + ".png")
+                plt.clf()
+        plt.close(fig)
         return
 
     def make_gif(self, frame_folder):
@@ -247,23 +254,15 @@ class PrimeiroTrabalho(ProblemInterface):
 
         newnovo = pd.DataFrame(database, index=None, columns=['Derivada', 'X', 'f(x)'])
         newnovo.plot(x='X', y='f(x)', c='Derivada', kind='scatter', cmap="jet", s=50, marker='o',
-                     alpha=0.7, label= r'$f ~ (x) = e^{-x} (x^3- x^2 - x)$')
+                     alpha=0.7, label=r'$f ~ (x) = e^{-x} (x^3- x^2 - x)$')
 
         """Gera os pontos da função para depois acrescentar sobre a curva os pontos, da derivada
         da função """
         self.plot()
 
         plt.title('Descida de Gradiente')
-        plt.xlabel('x')
-        plt.ylabel('f(x)')
+        plt.xlabel('x'), plt.ylabel('f(x)')
 
-        """
-        Vale a pena por essa informação no relatório:
-        
-        plt.text(-0.5, 0.6, 'Quanto maior o Valor da Derivada, maior é o passo.\n kmax = 100, porém foi até 49 pois \n o critério de gimin=0.1 ocorreu primeiro',
-                 style='italic',
-                 bbox={'facecolor': 'white', 'edgecolor': 'k', 'boxstyle': 'round, pad=1'})
-        """
         plt.text(-0.6, 0.6, r'$x_0 = 3$    $\alpha = 0.1$    $K_{max} = 100$',
                  bbox={'facecolor': 'white', 'edgecolor': 'k', 'boxstyle': 'round, pad=1'})
 
@@ -281,15 +280,15 @@ class PrimeiroTrabalho(ProblemInterface):
         xaxis = np.arange(min, max, 0.01)
         yaxis = np.arange(min, max, 0.01)
         x1, x2 = np.meshgrid(xaxis, yaxis)
-        resul = (4-2.1*x1**2+(x1**3)/3)*x1**3+x1*x2+(-4+4*x2**2)*x2**2
+        resul = (4 - 2.1 * x1 ** 2 + (x1 ** 3) / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
         figure = plt.figure()
         axis = figure.gca(projection='3d')
-        axis.plot_surface(x1, x2, resul, cmap='jet' ,linewidth=0, antialiased=False)
+        axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False)
 
         plt.title('Gradiente Decedente Multivariado')
         plt.xlabel('X1')
         plt.ylabel('X2')
         axis.set_zlabel('f(x1,x2)')
-        plt.contourf(x1, x2, resul, levels=50, cmap='jet',zdir="z", offset=-3)
+        plt.contourf(x1, x2, resul, levels=50, cmap='jet', zdir="z", offset=-3)
         plt.show()
     pass

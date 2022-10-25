@@ -8,10 +8,8 @@ def gradient_descent(problem):
     uma aproximação da derivada pelo método de diferenças finitas (eq. 3.1), com um passo
     h = 0.01, diferenciação numérica. """
 
-    print("Tarefa 1")
     x1 = problem.task1(x0=1, alfa=0.1, h=0.01)
-    print("x0: %.4f, x1: %.4f" % (1, x1))
-    print("")
+    print("Tarefa 1\nx0: %.4f, x1: %.4f\n" % (1, x1))
 
 
     """"    Calcule x1 , usando a derivada f′(x) 
@@ -19,9 +17,7 @@ def gradient_descent(problem):
     A função ’lambdify’ converte de uma função simbólica para uma função numérica. """
 
     dx1, _ = problem.task2(x0=1, alfa=0.1)
-    print("Tarefa 2")
-    print("x0: %.4f, x1: %.4f" % (1, dx1))
-    print("")
+    print("Tarefa 2\nx0: %.4f, x1: %.4f\n" % (1, dx1))
 
 
     """   
@@ -36,7 +32,8 @@ def gradient_descent(problem):
         x_0 --> x_1 --> x_2 --> x_3 --> x_4 --> x_5 ...
         e f(x_0) --> f(x_1) --> f(x_2) --> f(x_3) --> f(x_4) --> f(x_5) ...
         e f'(x_0) --> f'(x_1) --> f'(x_2) --> f'(x_3) --> f'(x_4) --> f'(x_5) ..."""
-    # problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=100)
+
+    problem.task3(x0=3, alfa=0.1, gmin=0.1, kmax=100)
 
 
     """
@@ -56,7 +53,7 @@ def gradient_descent(problem):
     problem.diferencas_finitas_duas_variaveis(point, alpha=0.05, gmin=0.1, kmax=50, h=0.01)
 
     """Essa função é pesada, vale a pena deixá-la como comentário"""
-    problem.make_gif(frame_folder='Image/gif/')
+    #problem.make_gif(frame_folder='Image/gif/')
 
     # dfdx1, dfdx2 = problem.task4_a(Xk=point, h=h)
     #print("Tarefa 4a: Aproximado o gradiente pelo método de diferenças finitas.\n"

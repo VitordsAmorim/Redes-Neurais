@@ -136,10 +136,11 @@ class PrimeiroTrabalho(ProblemInterface):
         # Data necessary to answer question 4b of the list
         minimo_fx1x2_dliteral = np.array(data_fx1x2_literal)[len(data_fx1x2_literal) - 1:len(data_fx1x2_literal)]
 
-        #self.plot_lossfunction(data_fx1x2, data_fx1x2_literal)
+        self.plot_lossfunction(data_fx1x2, data_fx1x2_literal)
         return minimo_fx1x2_mdf2, minimo_fx1x2_dliteral
 
     def task4_a(self, Xk, h):
+
         """Calculates the gradient vector by the finite difference method"""
         dfdx1 = self.dfx_4(Xk[0], Xk[1], h, 0)
         dfdx2 = self.dfx_4(Xk[0], Xk[1], 0, h)
@@ -158,31 +159,31 @@ class PrimeiroTrabalho(ProblemInterface):
     def task4_b(self, Xk):
         x1 = Symbol('x1')
         x2 = Symbol('x2')
+        # CORRIGIR E TROCAR ESSA FUNCAO DAQUI
         f = (4 - 2.1 * x1 ** 2 + x1 ** 3 / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
 
-        """derivada da fx/dx1"""
+        """derivada da f(x1x2)/dx1"""
         difx1 = diff(f, x1)  # dfx1 is the derivative of the function
         lam_f1 = lambdify(x1, difx1)
         dfdx1 = lam_f1(Xk[0])
         func = lambdify(x2, dfdx1)
         dfdw1 = func(Xk[1])
 
-        """derivada da fx/dx2"""
+        """derivada da f(x1x2)/dx2"""
         difx2 = diff(f, x2)  # dfx2 is the derivative of the function
         lam_f2 = lambdify(x2, difx2)
         dfdx2 = lam_f2(Xk[1])
         func = lambdify(x1, dfdx2)
         dfdw2 = func(Xk[0])
 
-        # xk = x0 - (alfa * dfdx)  # x_(k+1) <-  xk - alfa * f'(xk)
         return np.array([dfdw1, dfdw2])
 
-    # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
-    # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
-    def task4_c(self):
+    def task4_c(self, fx1x2_dliteral):
 
-        # self.plot_question4()
-        self.graf3d()
+        #self.plot_question4()
+        self.graf3d(history_x=fx1x2_dliteral)
+
+
         return print('task4_c')
 
 
@@ -195,25 +196,6 @@ class PrimeiroTrabalho(ProblemInterface):
     #   as funções responsáveis por plotar
     #   e exportar os arquivos
     #
-
-    def plot_question4(self):
-
-        x1 = np.linspace(-4, 4, 100)
-        x2 = np.linspace(-4, 4, 100)
-        x1, x2 = np.meshgrid(x1, x2)
-        Z = self.task4_function(x1, x2)
-
-        fig = plt.figure(figsize=(5, 5))
-        ax = plt.axes(projection='3d')
-        # ax.contour3D(x1, x2, Z, 50, cmap='coolwarm')
-        ax.plot_surface(x1, x2, Z, cmap="coolwarm", lw=0.5, rstride=1, cstride=1)
-
-        ax.set_xlabel(r'X1', fontsize=10)
-        ax.set_ylabel(r'X2', fontsize=10)
-        ax.set_zlabel(r'f(X1, X2)', fontsize=10)
-        ax.view_init(70, 35)
-        plt.show()
-        pass
 
     def plot_lossfunction(self, database, database_dliteral):
 
@@ -320,18 +302,57 @@ class PrimeiroTrabalho(ProblemInterface):
         plt.show()
         pass
 
-    def graf3d(self):
-        min, max = -1.0, 1.0
+    def plot_question4(self):
+
+        x1 = np.linspace(-2, 6, 100)
+        x2 = np.linspace(-3, 0, 100)
+        x1, x2 = np.meshgrid(x1, x2)
+        Z = self.task4_function(x1, x2)
+
+        fig = plt.figure(figsize=(5, 5))
+        ax = plt.axes(projection='3d')
+        #ax.contour3D(x1, x2, Z, 50, cmap='inferno')
+        ax.plot_surface(x1, x2, Z, cmap="inferno", lw=0.5, rstride=1, cstride=1)
+
+        ax.set_xlabel(r'X1', fontsize=10)
+        ax.set_ylabel(r'X2', fontsize=10)
+        ax.set_zlabel(r'f(X1, X2)', fontsize=10)
+        ax.view_init(70, 35)
+        plt.show()
+        pass
+
+
+    def graf3d(self, history_x):
+
+        """
+        Região do domínio da função que quero visualizar
+        """
+
+        """Gera-se todos os pontos, de parte do domínio da função"""
+        min, max = -1.5, 1.5
         xaxis = np.arange(min, max, 0.01)
         yaxis = np.arange(min, max, 0.01)
         x1, x2 = np.meshgrid(xaxis, yaxis)
-        resul = (4 - 2.1 * x1 ** 2 + (x1 ** 3) / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
+        resul = self.task4_function(x1, x2)
+
+
+        x1axis, x2axis, zresult  = np.array(history_x)[:, 0:1], np.array(history_x)[:, 1:2], np.array(history_x)[:, 2:3]
+        #x1axis, x2axis, zresult = np.reshape(x1axis, -1), np.reshape(x2axis, -1), np.reshape(zresult, -1)
+        lx1, lx2, lz = x1axis, x2axis, zresult
+
         figure = plt.figure()
         axis = figure.gca(projection='3d')
-        axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False)
 
-        plt.title('Gradiente Decedente Multivariado')
+
+        i=0
+        lx1, lx2, lz = float(lx1[i:i + 1]), float(lx2[i:i + 1]), float(lz[i:i + 1])
+        #axis.plot_surface(lx1, lx2, lz, marker="d", markersize=5, markeredgecolor="black",
+        #         markerfacecolor="orange")
+        plt.plot([0], [0], [10], color='green', marker='o', markersize=5, zorder = 10)
+
+        axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False, zorder = 1)
+
+        plt.title('Descida de gradiente: 2 variáveis')
         plt.xlabel('X1'), plt.ylabel('X2'), axis.set_zlabel('f(x1,x2)')
-        plt.contourf(x1, x2, resul, levels=50, cmap='jet', zdir="z", offset=-3)
         plt.show()
     pass

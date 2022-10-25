@@ -61,10 +61,9 @@ def gradient_descent(problem):
     # conseguir salvar os valores de casa iteração
     # depois plotar um gráfico com vários pontos iniciasi percorrendo ao mesmo tempo.
 
-
     # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
     # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
-    #problem.task4_c()
+    problem.task4_c(fx1x2_dliteral)
 
     """Essa função é pesada, vale a pena deixá-la como comentário"""
     #problem.make_gif(frame_folder='Image/gif/')

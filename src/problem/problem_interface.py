@@ -26,7 +26,7 @@ class ProblemInterface(ABC):
         pass
 
     @abstractmethod
-    def task4_c(self):
+    def task4_c(self, history_x):
         pass
 
     @abstractmethod

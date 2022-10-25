@@ -118,9 +118,6 @@ class PrimeiroTrabalho(ProblemInterface):
             data_fx1x2.append([x[0], x[1], fx1x2])   # save the values of f(X1, X2)
             k += 1
 
-        # Data necessary to answer question 4a of the list
-        minimo_fx1x2_mdf2 = np.array(data_fx1x2)[len(data_fx1x2)-1:len(data_fx1x2)]
-
         k, x = 0, np.array(initialp)
         data_fx1x2_literal = []
         
@@ -133,11 +130,7 @@ class PrimeiroTrabalho(ProblemInterface):
             fx1x2 = self.task4_function(x[0], x[1])
             data_fx1x2_literal.append([x[0], x[1], fx1x2])
             k += 1
-        # Data necessary to answer question 4b of the list
-        minimo_fx1x2_dliteral = np.array(data_fx1x2_literal)[len(data_fx1x2_literal) - 1:len(data_fx1x2_literal)]
-
-        self.plot_lossfunction(data_fx1x2, data_fx1x2_literal)
-        return minimo_fx1x2_mdf2, minimo_fx1x2_dliteral
+        return data_fx1x2, data_fx1x2_literal
 
     def task4_a(self, Xk, h):
 
@@ -175,15 +168,10 @@ class PrimeiroTrabalho(ProblemInterface):
         dfdx2 = lam_f2(Xk[1])
         func = lambdify(x1, dfdx2)
         dfdw2 = func(Xk[0])
-
         return np.array([dfdw1, dfdw2])
 
     def task4_c(self, fx1x2_dliteral):
-
-        #self.plot_question4()
         self.graf3d(history_x=fx1x2_dliteral)
-
-
         return print('task4_c')
 
 
@@ -247,7 +235,6 @@ class PrimeiroTrabalho(ProblemInterface):
                          markerfacecolor="green")
                 plt.plot(l1c, l2c, marker="d", markersize=5, markeredgecolor="black",
                          markerfacecolor="orange")
-
                 plt.savefig("Image/gif/" + adc + str(i) + ".png")
                 plt.clf()
         plt.close(fig)
@@ -257,7 +244,7 @@ class PrimeiroTrabalho(ProblemInterface):
         frames = [Image.open(image) for image in sorted(glob.glob(f"{frame_folder}/*.png"))]
 
         frame_one = frames[0]
-        frame_one.save("Image/my_awesome.gif", format="GIF", append_images=frames,
+        frame_one.save("Image/my_awesome2.gif", format="GIF", append_images=frames,
                        save_all=True, duration=400, loop=0)
 
     def plot_question3(self):
@@ -283,8 +270,10 @@ class PrimeiroTrabalho(ProblemInterface):
         newnovo.plot(x='X', y='f(x)', c='Derivada', kind='scatter', cmap="jet", s=50, marker='o',
                      alpha=0.7, label=r'$f ~ (x) = e^{-x} (x^3- x^2 - x)$')
 
-        """Gera os pontos da função para depois acrescentar sobre a curva os pontos, da derivada
-        da função """
+        """
+        Gera os pontos da função para depois acrescentar sobre a curva os pontos, da derivada
+        da função.
+        """
         self.plot_question3()
 
         plt.title('Descida de Gradiente')
@@ -328,31 +317,37 @@ class PrimeiroTrabalho(ProblemInterface):
         Região do domínio da função que quero visualizar
         """
 
-        """Gera-se todos os pontos, de parte do domínio da função"""
+        """
+        Gera-se todos os pontos, de parte do domínio da função.
+        Com isso, obtem-se parte da superfície.
+        """
         min, max = -1.5, 1.5
         xaxis = np.arange(min, max, 0.01)
         yaxis = np.arange(min, max, 0.01)
         x1, x2 = np.meshgrid(xaxis, yaxis)
         resul = self.task4_function(x1, x2)
 
-
+        """
+        Converter os dados gerados pelo caminho de x para ser plotado
+        """
         x1axis, x2axis, zresult  = np.array(history_x)[:, 0:1], np.array(history_x)[:, 1:2], np.array(history_x)[:, 2:3]
         #x1axis, x2axis, zresult = np.reshape(x1axis, -1), np.reshape(x2axis, -1), np.reshape(zresult, -1)
         lx1, lx2, lz = x1axis, x2axis, zresult
 
-        figure = plt.figure()
-        axis = figure.gca(projection='3d')
+        """
+        Inicia o processo de plotagem
+        """
+        for i in range(len(lz)):
+            figure = plt.figure()
+            axis = figure.gca(projection='3d')
+            w1, w2, w3 = float(lx1[i:i + 1]), float(lx2[i:i + 1]), float(lz[i:i + 1])
+            plt.plot([w1], [w2], [w3], color='green', marker='o', markersize=4, zorder=5)
+            axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False, zorder=1)
+            plt.title('Descida de gradiente: 2 variáveis')
+            plt.xlabel('X1'), plt.ylabel('X2'), axis.set_zlabel('f(x1,x2)')
 
-
-        i=0
-        lx1, lx2, lz = float(lx1[i:i + 1]), float(lx2[i:i + 1]), float(lz[i:i + 1])
-        #axis.plot_surface(lx1, lx2, lz, marker="d", markersize=5, markeredgecolor="black",
-        #         markerfacecolor="orange")
-        plt.plot([0], [0], [10], color='green', marker='o', markersize=5, zorder = 10)
-
-        axis.plot_surface(x1, x2, resul, cmap='jet', linewidth=0, antialiased=False, zorder = 1)
-
-        plt.title('Descida de gradiente: 2 variáveis')
-        plt.xlabel('X1'), plt.ylabel('X2'), axis.set_zlabel('f(x1,x2)')
-        plt.show()
+            # elevated angle of -140 degrees and a horizontal angle of 60 degrees.
+            axis.view_init(-140, 60)
+            plt.savefig("Image/grafico-3d/" + str(i) + ".png")
+            plt.clf()
     pass

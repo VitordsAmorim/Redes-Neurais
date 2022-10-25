@@ -1,6 +1,5 @@
 # Call the functions in the Descida_de_gradiante file
 import numpy as np
-from sympy import diff, Symbol
 
 def gradient_descent(problem):
 
@@ -45,27 +44,28 @@ def gradient_descent(problem):
     print("Questão 4")
     print("f(x1, x2) = (4 - 2.1 * x1**2 + x1**3 / 3 ) * x1**3 + x1 * x2 + (-4 + 4 * x2**2) * x2**2\n")
 
-    point = [1, 1]  # Starting points
-    fx1x2_mdf, fx1x2_dliteral = problem.gradiente_duas_variaveis(point, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
     print("       X1           X2        f(x1,x2)  Ponto Inicial")
-    print(fx1x2_mdf, point, ": Método das diferenças finitas")
-    print(fx1x2_dliteral, point, ": Método Literal para o cálculo da derivada\n")
 
-    point = [-0.5, -0.5]
-    fx1x2_mdf, fx1x2_dliteral = problem.gradiente_duas_variaveis(point, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
-    print(fx1x2_mdf, point, ": Método das diferenças finitas")
-    print(fx1x2_dliteral, point, ": Método Literal para o cálculo da derivada")
+    initial_points = [[1, 1], [-0.5, -0.5]]
+    for i in initial_points:
+        data_fx1x2, data_fx1x2_literal = problem.gradiente_duas_variaveis(i, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
+        """Responsável por plotar as diversas imagens"""
+        # problem.plot_lossfunction(data_fx1x2, data_fx1x2_literal)
 
-    # colocar o código acima num for, para ir fazendo o calculo de acordo
-    # com novas posições iniciais
-    # conseguir salvar os valores de casa iteração
-    # depois plotar um gráfico com vários pontos iniciasi percorrendo ao mesmo tempo.
+        minimo_fx1x2_mdf2 = np.array(data_fx1x2)[len(data_fx1x2) - 1:len(data_fx1x2)]
+        minimo_fx1x2_dliteral = np.array(data_fx1x2_literal)[len(data_fx1x2_literal) - 1:len(data_fx1x2_literal)]
+        print(minimo_fx1x2_mdf2, i, "    : Método das diferenças finitas")
+        print(minimo_fx1x2_dliteral, i, "    : Método Literal para o cálculo da derivada\n")
 
-    # (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
-    # e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
-    problem.task4_c(fx1x2_dliteral)
+
+    """
+    (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
+    e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
+    """
+    problem.task4_c(data_fx1x2_literal)
 
     """Essa função é pesada, vale a pena deixá-la como comentário"""
-    #problem.make_gif(frame_folder='Image/gif/')
+    # problem.make_gif(frame_folder='Image/gif/')
+    # problem.make_gif(frame_folder='Image/grafico-3d/')
 
     return [print("Fim")]

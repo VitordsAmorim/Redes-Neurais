@@ -46,7 +46,7 @@ def gradient_descent(problem):
 
     print("       X1           X2        f(x1,x2)  Ponto Inicial")
 
-    initial_points = [[1, 1], [-0.5, -0.5]]
+    initial_points = [[1, 1], [-0.5, -0.5], [0, 0], [0.3, -0.2], [0.7, 1], [1, -0.5]]
     history_of_several_points = []
     for i in initial_points:
         data_fx1x2, data_fx1x2_literal = problem.gradiente_duas_variaveis(i, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
@@ -68,7 +68,7 @@ def gradient_descent(problem):
     # problem.task4_c(data_fx1x2_literal) # plota o gif do 3d
 
     """Essa função é pesada, vale a pena deixá-la como comentário"""
-    # problem.make_gif(frame_folder='Image/gif/')
+    problem.make_gif(frame_folder='Image/gif/')
     # problem.make_gif(frame_folder='Image/grafico-3d/')
 
     return [print("Fim")]

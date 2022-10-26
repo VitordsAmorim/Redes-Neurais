@@ -229,7 +229,7 @@ class PrimeiroTrabalho(ProblemInterface):
 
         frame_one = frames[0]
         frame_one.save("Image/my_awesome2.gif", format="GIF", append_images=frames,
-                       save_all=True, duration=400, loop=0)
+                       save_all=True, duration=300, loop=0)
 
     def plot_question3(self):
         """Generate the points from the function"""

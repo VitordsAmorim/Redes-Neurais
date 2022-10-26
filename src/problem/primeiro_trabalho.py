@@ -185,58 +185,42 @@ class PrimeiroTrabalho(ProblemInterface):
     #   e exportar os arquivos
     #
 
-    def plot_lossfunction(self, database, database_dliteral):
+    def plot_lossfunction(self, database_dliteral):
 
         """ O resultado, resul, apresenta o valor da função que queremos minimizar
         ao realizar o método da descida de gradientes. Logo, a sequência de valores de x1 e x2
         escolhidos, indicam o caminho que percorre a busca pela melhor solução"""
-
-        dados = np.array(database)
-        xaxis, yaxis, resul = dados[:, 0:1], dados[:, 1:2], dados[:, 2:3]
-        xaxis, yaxis, resul = np.reshape(xaxis, -1), np.reshape(yaxis, -1), np.reshape(resul, -1)
-        w1, w2 = xaxis, yaxis
-
-        xaxis, yaxis = np.array(database_dliteral)[:, 0:1], np.array(database_dliteral)[:, 1:2]
-        xaxis, yaxis  = np.reshape(xaxis, -1), np.reshape(yaxis, -1)
-        l1, l2 = xaxis, yaxis
 
         """ Define the parameters and how much of the domain of the function
             you want to plot the contour line"""
         fig = plt.figure()  # Create the figure
         min, max = -1.5, 1.5
         xaxis, yaxis = np.arange(min, max, 0.01), np.arange(min, max, 0.01)
-        x1, x2 = np.meshgrid(xaxis, yaxis)
-        resul = (4 - 2.1 * x1 ** 2 + (x1 ** 3) / 3) * x1 ** 3 + x1 * x2 + (-4 + 4 * x2 ** 2) * x2 ** 2
+        d1, d2 = np.meshgrid(xaxis, yaxis)
+        resul = self.task4_function(d1, d2)
 
-        """ Added to not have to put this part of the algorithm as a comment often,
-            because it's heavy"""
-        chave = True
-        if chave == True:
-            adc = str(0)
-            for i in range(0, len(w1), 1):
-                tamanho = len(xaxis)
+        """
+        It is necessary to know the length of the longest list to build the for loop
+        """
+        max_value, adc = None, str(0)
+        for indice, valor in enumerate(database_dliteral):
+            if (max_value is None or len(valor) > max_value): max_value = len(valor)
 
-                """ Important to save the images in an orderly way """
-                if i == 10:
-                    adc = ""
-
-                plt.title('Descida de gradiente')
-                plt.xlabel('X1'), plt.ylabel('X2')
-
-                """ xc, yc -> represent the coordinates of the points
-                    of a solution. It is done iteratively so that several
-                    images are plotted, and then a gif is created """
-                xc, yc = float(w1[i:i + 1]), float(w2[i:i + 1])
-                l1c, l2c = float(l1[i:i + 1]), float(l2[i:i + 1])
-
-                """ Plot the contour and then the point"""
-                plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy')
-                plt.plot(xc, yc,   marker="o", markersize=5, markeredgecolor="black",
-                         markerfacecolor="green")
-                plt.plot(l1c, l2c, marker="d", markersize=5, markeredgecolor="black",
-                         markerfacecolor="orange")
-                plt.savefig("Image/gif/" + adc + str(i) + ".png")
-                plt.clf()
+        for pos in range(max_value):
+            if pos == 10: adc = ""  # Organize the naming of output files
+            plt.title('Descida de gradiente')
+            plt.xlabel('X1'), plt.ylabel('X2')
+            plt.contourf(xaxis, yaxis, resul, levels=50, cmap='RdGy')
+            for p in range(len(database_dliteral)):
+                try:
+                    x1, x2 = database_dliteral[p][pos][0], database_dliteral[p][pos][1]
+                    plt.plot(x1, x2, marker="3", markersize=5, markeredgecolor="black", markerfacecolor="orange")
+                except:
+                    lastp = len(database_dliteral[p])
+                    x1, x2 = database_dliteral[p][lastp-1][0], database_dliteral[p][lastp-1][1]
+                    plt.plot(x1, x2, marker="3", markersize=5, markeredgecolor="black", markerfacecolor="orange")
+            plt.savefig("Image/gif/" + adc + str(pos) + ".png")
+            plt.clf()
         plt.close(fig)
         return
 

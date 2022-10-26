@@ -47,22 +47,25 @@ def gradient_descent(problem):
     print("       X1           X2        f(x1,x2)  Ponto Inicial")
 
     initial_points = [[1, 1], [-0.5, -0.5]]
+    history_of_several_points = []
     for i in initial_points:
         data_fx1x2, data_fx1x2_literal = problem.gradiente_duas_variaveis(i, alpha=0.05, gmin=0.1, kmax=100, h=0.01)
-        """Responsável por plotar as diversas imagens"""
-        # problem.plot_lossfunction(data_fx1x2, data_fx1x2_literal)
 
         minimo_fx1x2_mdf2 = np.array(data_fx1x2)[len(data_fx1x2) - 1:len(data_fx1x2)]
         minimo_fx1x2_dliteral = np.array(data_fx1x2_literal)[len(data_fx1x2_literal) - 1:len(data_fx1x2_literal)]
         print(minimo_fx1x2_mdf2, i, "    : Método das diferenças finitas")
         print(minimo_fx1x2_dliteral, i, "    : Método Literal para o cálculo da derivada\n")
 
+        history_of_several_points.append(data_fx1x2_literal)
+
+    """ I want to plot an image within many moving start points """
+    problem.plot_lossfunction(history_of_several_points)
 
     """
     (c) Desenhe a trajetória de x k no plano (x 1 , x 2 ),
     e o valor da função correspondente de f(x1 , x2) no gráfico 3-D.
     """
-    problem.task4_c(data_fx1x2_literal)
+    # problem.task4_c(data_fx1x2_literal) # plota o gif do 3d
 
     """Essa função é pesada, vale a pena deixá-la como comentário"""
     # problem.make_gif(frame_folder='Image/gif/')

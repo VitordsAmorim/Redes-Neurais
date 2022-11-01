@@ -10,20 +10,21 @@ Work developed to apply the gradient descent techniques studied during Neural Ne
 
 ## How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
+To clone and run this application, you will need [Github](https://github.com/git-guides/install-git) installed, or you can download the zip file on your computer. From your command line:
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/amitmerchant1990/pomolectron
+$ git clone https://github.com/VitordsAmorim/Redes-Neurais.git
 
 # Go into the repository
-$ cd pomolectron
+$ cd Redes-Neurais
 
 # Install dependencies
-$ npm install
+$ apt install numpy
+$ apt install pandas
 
-# Run the app
-$ npm start
+# Run the code
+$ python3 main.py
 ```
 
 

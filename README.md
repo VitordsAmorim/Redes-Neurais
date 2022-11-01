@@ -1,9 +1,9 @@
 # Algorithm: Gradient descent
 
-Work developed to apply the gradient descent techniques studied during Neural Networks in the master's degree in Informatics. The work consisted of minimizing the value of the functions using two possible approaches. In the end, some graphics and images in gif format are exported, helping to understand the method.
+Work developed to apply the gradient descent techniques studied during Neural Networks class in the master's degree in Informatics. The work consisted of minimizing the value of the functions using two possible approaches. In the end, some graphics and images in gif format were exported, helping to understand the method. The detailed description of the work is in this repository, in "Trabalho de Redes Neurais.pdf".
 
 ## Table of contents
-* [General info](#general-info)
+* [How To Use](#how-to-use)
 * [Technologies](#technologies)
 * [Setup](#setup)
 
@@ -31,4 +31,12 @@ $ python3 main.py
 ## Technologies
 Project is created with:
 * Python version: 3.10.6
+
+## Team
+
+[![Vitor Amorim](https://avatars.githubusercontent.com/u/24567922?v=4)](https://github.com/VitordsAmorim)  | [![Wesley Pimentel](https://avatars.githubusercontent.com/u/86068242?v=4)](https://github.com/WesleyPereiraPimentel)
+---|---
+[Vitor Amorim](https://github.com/VitordsAmorim) |[Wesley Pimentel](https://github.com/WesleyPereiraPimentel)
+
+
 	

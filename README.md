@@ -34,19 +34,17 @@ Project is created with:
 
 ## Team
 
-<div align="center">
+<div align="left">
   <a href="https://github.com/VitordsAmorim">
-  <img src="https://github.com/VitordsAmorim.png" width="100"/>
+  <img src="https://github.com/VitordsAmorim.png" width="120"/>
   </a>
   <a href="https://github.com/WesleyPereiraPimentel">
-  <img src="https://github.com/WesleyPereiraPimentel.png" width="100"/>
+  <img src="https://github.com/WesleyPereiraPimentel.png" width="120"/>
   </a>
 </div>
 
 
-[![Vitor Amorim](https://avatars.githubusercontent.com/u/24567922?v=4)](https://github.com/VitordsAmorim)  | [![Wesley Pimentel](https://avatars.githubusercontent.com/u/86068242?v=4)](https://github.com/WesleyPereiraPimentel)
----|---
-[Vitor Amorim](https://github.com/VitordsAmorim) |[Wesley Pimentel](https://github.com/WesleyPereiraPimentel)
+
 
 
 	

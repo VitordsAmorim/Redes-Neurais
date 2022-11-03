@@ -32,6 +32,26 @@ $ python3 main.py
 Project is created with:
 * Python version: 3.10.6
 
+
+## Expected outputs
+
+The gradient descent method is applied to each pair of points using the analytically calculated derivative. 
+
+```python
+# Given the set of starting points:
+initial_points = [[1, 1], [-0.5, -0.5], [0, 0], [0.3, -0.2], [0.7, 1], [1, -0.5]]
+```
+
+The solution of the function at each new iteration decreases and converges to minimum points. Thus the goal of finding the parameters which minimize the function was achieved, but there is no guarantee that it is a global minimum. As shown in the image below, the darker the region, the lower the value of the function.
+
+<div align="center">
+	<img src="https://github.com/VitordsAmorim/Redes-Neurais/blob/main/Image/my_awesome2.gif" width="480">
+</div>
+
+
+
+
+
 ## Team
 
 <div align="left">

@@ -36,13 +36,17 @@ Project is created with:
 
 <div align="left">
   <a href="https://github.com/VitordsAmorim">
-  <img src="https://github.com/VitordsAmorim.png" width="120" title="Vitor Amorim"/>
+  	<img src="https://github.com/VitordsAmorim.png" width="120">
+	  
   </a>
+	
   <a href="https://github.com/WesleyPereiraPimentel">
-  <img src="https://github.com/WesleyPereiraPimentel.png" width="120" title="Wesley Pimentel"/>
+  <img src="https://github.com/WesleyPereiraPimentel.png" width="120"/>
   </a>
 </div>
-
+	  
+  |Vitor Amorim | Wesley Pimentel|
+  |:-:|:-:|
 
 
 

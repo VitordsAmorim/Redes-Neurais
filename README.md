@@ -35,7 +35,13 @@ Project is created with:
 
 ## Expected outputs
 
-The gradient descent method is applied to each pair of points using the analytically calculated derivative. 
+The gradient descent method is applied to each pair of points using the analytically calculated derivative. The analyzed function and its gradient are respectively:
+<div align="center">
+$f(x_1, x_2) = 4 x_{1}^{3} -2.1 x_1^5 + \frac{x_1^{6}}{3} + x_1 x_2 -4 x_2^2 + 4 x_2^4 $
+	
+	
+$\nabla f(x_1, x_2) = (2 x_1^5 -10.5 x_1^4 + 12x_1^2 + x_2,~~~~  16 x_2^3 -8x_2 + x_1$ )
+</div>
 
 ```python
 # Given the set of starting points:

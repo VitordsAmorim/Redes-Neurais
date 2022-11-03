@@ -54,19 +54,10 @@ The solution of the function at each new iteration decreases and converges to mi
 
 ## Team
 
-<div align="left">
-  <a href="https://github.com/VitordsAmorim">
-  	<img src="https://github.com/VitordsAmorim.png" width="120">
-	  
-  </a>
-	
-  <a href="https://github.com/WesleyPereiraPimentel">
-  <img src="https://github.com/WesleyPereiraPimentel.png" width="120"/>
-  </a>
-</div>
-	  
-  |Vitor Amorim | Wesley Pimentel|
+  |<a href="https://github.com/VitordsAmorim"><img src="https://github.com/VitordsAmorim.png" width="120"></a> | <a href="https://github.com/WesleyPereiraPimentel">  <img src="https://github.com/WesleyPereiraPimentel.png" width="120"/></a> |
   |:-:|:-:|
+  |Vitor Amorim | Wesley Pimentel|
+
 
 
 

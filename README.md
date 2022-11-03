@@ -5,7 +5,7 @@ Work developed to apply the gradient descent techniques studied during Neural Ne
 ## Table of contents
 * [How To Use](#how-to-use)
 * [Technologies](#technologies)
-* [Setup](#setup)
+* [Team](#team)
 
 
 ## How To Use

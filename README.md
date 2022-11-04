@@ -20,8 +20,7 @@ $ git clone https://github.com/VitordsAmorim/Redes-Neurais.git
 $ cd Redes-Neurais
 
 # Install dependencies
-$ apt install numpy
-$ apt install pandas
+$ pip install -r requirements.txt
 
 # Run the code
 $ python3 main.py
